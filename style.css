@@ -1,18 +1,32 @@
 body {
     padding: 0;
     text-align: center;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: space-evenly;
+    
   }
 
 
 .game-intro {
-    float: left;
     padding: 0% 10%;
+    align-items: stretch;
+    top: 50%;
+    left: 50%;
 }
 
 canvas{
     border: 1px solid red;
 }
 
+h1{
+  margin-top: 40px;
+  font-family: 'Modak', cursive;
+
+  font-size: 50px;
+  
+  font-style: italic;
+}
 
 body button {
     font-size: 30px;
