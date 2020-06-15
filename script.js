@@ -1,22 +1,36 @@
-window.onload = () => {
-  var topScore = 0;
-  var jumpCount = 0;
-  var frames = 0;
-  const SPRITE_SZ = 40;
-  const colors = ['#2ca8c2', '#98c000', '#f76d3c', '#f15f74','#5481e6'];
-  
+let topScore = [];
 
+
+window.onload = () => {
+ 
+  let jumpCount = 0;
+  let frames = 0;
+  let id = null;
+  const SPRITE_SZ = 40;
+
+  //CORES DOS OBSTACULOS
+  const colors = ['#2ca8c2', '#980000', '#f76d3c', '#f15f74','#5481e6'];
+  
+  
+  //ARRAY DE OBSTACULOS
   const myObstacles = [];
 
+
+  //CRIACAO CANVAS
   const canvas = document.getElementById('canvas');
   const ctx = this.canvas.getContext('2d');
 
+
+
+  // IMAGENS
   const roadImg = new Image();
   roadImg.src = './images/mato.jpg';
   const dinoA = new Image();
   dinoA.scr = './images/DinoSpritesAzul.png'
 
   
+
+
   const myGameArea = {
     canvas: document.getElementById('canvas'),
     context: this.canvas.getContext('2d'),
@@ -31,13 +45,15 @@ window.onload = () => {
 
     stop: function () {
       cancelAnimationFrame(this.interval);
+      document.getElementById('start-button').style.visibility = "initial";
+      this.clear();
     },
 
     score: function () {
       this.points = Math.floor(frames / 9);
 
       if (this.points > topScore) {
-        topScore = this.points;
+        topScore[0] = this.points;
       }
       
       this.context.beginPath();
@@ -88,52 +104,28 @@ window.onload = () => {
     },
   };
 
-
-  //=== Animacao do Personagem (NAO UTILIZADO)===
-  class Animation {
-    constructor(frame_set, delay) {
-      this.delay = delay;
-      this.frame = 0;
-      this.count = 0;
-      this.frame_index = 0;
-      this.frame_set = frame_set;
-    }
-
-    change(frame_set, delay = 15) {
-      if (this.frame_set != frame_set) {
-        this.count = 0;
-        this.delay = delay;
-        this.frame_index = 0;
-        this.frame_set = frame_set;
-        this.frame = this.frame_set[this.frame_index];
-      }
-    }
-    
-    draw() {
-      ctx.drawImage(
-        dinoA,
-        player.animation.frame * (SPRITE_SZ + 12),
-        10,
-        SPRITE_SZ,
-        SPRITE_SZ,
-        player.x,
-        player.y,
-        SPRITE_SZ,
-        SPRITE_SZ
-        );
-    }
-
-  }
-
-  //=== Construcao do Obstaculo ===
-  class Component {
-    constructor(width, height, color, x, y, isPlayer = false, animation) {
-      this.animation = animation;
+  class Objects {
+    constructor (width, height, x, y){
       this.width = width;
       this.height = height;
-      this.color = color;
       this.x = x;
       this.y = y;
+    }
+  }
+
+  class Player extends Objects {
+    constructor (width, height, x, y, animation) {
+      super (width, height, x, y)
+      this.animation = animation;
+    }
+  }
+
+  
+  //=== Construcao do Obstaculo ===
+  class Obstaculo extends Objects {
+    constructor(width, height, color, x, y, isPlayer = false) {
+      super(width, height, x, y)
+      this.color = color;
       this.speedX = 0;
       this.speedY = 0;
       this.isPlayer = isPlayer;
@@ -141,7 +133,6 @@ window.onload = () => {
 
     update() {
       const ctx = myGameArea.context;
-
       ctx.fillStyle = this.color;
       ctx.fillRect(this.x, this.y, this.width, this.height);
       
@@ -179,7 +170,7 @@ window.onload = () => {
 
   
   //Create new Player/Rectangle
-  const rec = new Component(30, 30, 'white', 100, 50, new Animation());
+  const rec = new Obstaculo(30, 30, 'white', 100, 50);
 
   //Criando personagem
   // const player = new Player (SPRITE_SZ, SPRITE_SZ, 55, 250, new Animation());
@@ -202,14 +193,16 @@ window.onload = () => {
     myGameArea.gravity();
     rec.update();
     updateObstacles();
+    
+
+    //animation start
+    id = requestAnimationFrame(updateGameArea);
+
 
     // player drawing
     // rec.animation.change(sprite_sheet.frame_sets[0], 8);
     // rec.animation.update();
     // rec.animation.draw();
-    
-    myGameArea.interval = requestAnimationFrame(updateGameArea);
-
     checkGameOver();
     myGameArea.score();
   }
@@ -253,39 +246,39 @@ window.onload = () => {
     if(frames < 1500){
       if (frames % (130 - frameR) === 0){
         let x = myGameArea.canvas.width;
-        myObstacles.push(new Component(30, 30, colors[colorR], x, 268));
+        myObstacles.push(new Obstaculo(30, 30, colors[colorR], x, 268));
       }
 
     } else if(frames < 2500) {
         if (frames % (126 - frameR) === 0){
           let x = myGameArea.canvas.width;
-          myObstacles.push(new Component(30, 30, colors[colorR], x, 268));
+          myObstacles.push(new Obstaculo(30, 30, colors[colorR], x, 268));
         }  
         // FLY ENEMIES
         if (frames % (198 - frameR) === 0){
           let x = myGameArea.canvas.width;
-          myObstacles.push(new Component(30, 30, colors[colorR], x, 268));
+          myObstacles.push(new Obstaculo(30, 30, colors[colorR], x, 268));
         }
         
     } else if(frames <= 4000) {
       if (frames % (120 - frameR) === 0){
         let x = myGameArea.canvas.width;
-        myObstacles.push(new Component(30, 30, colors[colorR], x, 268));
+        myObstacles.push(new Obstaculo(30, 30, colors[colorR], x, 268));
       }  
       // FLY ENEMIES
       if (frames % (185 - frameR) === 0){
         let x = myGameArea.canvas.width;
-        myObstacles.push(new Component(30, 30, colors[colorR], x, 268));
+        myObstacles.push(new Obstaculo(30, 30, colors[colorR], x, 268));
       }
       
     } else if(frames > 4000) {
       if (frames % (110 - frameR) === 0){
         let x = myGameArea.canvas.width;
-        myObstacles.push(new Component(30, 30, colors[colorR], x, 268));
+        myObstacles.push(new Obstaculo(30, 30, colors[colorR], x, 268));
       }  
       if (frames % (180 - frameR) === 0){
         let x = myGameArea.canvas.width;
-        myObstacles.push(new Component(30, 30, colors[colorR], x, 268));
+        myObstacles.push(new Obstaculo(30, 30, colors[colorR], x, 268));
       }
     }
   }
@@ -298,7 +291,11 @@ window.onload = () => {
 
     if (crashed) {
       myGameArea.stop();
+      cancelAnimationFrame(id);
+      window.location.reload();
+    
     }
   }
+
 
 };
