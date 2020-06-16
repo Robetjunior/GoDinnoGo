@@ -1,19 +1,18 @@
-let topScore = [];
-
-
 window.onload = () => {
  
+
+  let topScore = [];
   let jumpCount = 0;
   let frames = 0;
   let id = null;
-  const SPRITE_SZ = 40;
+  
 
   //CORES DOS OBSTACULOS
   const colors = ['#2ca8c2', '#980000', '#f76d3c', '#f15f74','#5481e6'];
   
   
   //ARRAY DE OBSTACULOS
-  const myObstacles = [];
+  let myObstacles = [];
 
 
   //CRIACAO CANVAS
@@ -25,11 +24,7 @@ window.onload = () => {
   // IMAGENS
   const roadImg = new Image();
   roadImg.src = './images/mato.jpg';
-  const dinoA = new Image();
-  dinoA.scr = './images/DinoSpritesAzul.png'
-
-  
-
+ 
 
   const myGameArea = {
     canvas: document.getElementById('canvas'),
@@ -38,14 +33,12 @@ window.onload = () => {
     start: function () {
       this.interval = requestAnimationFrame(updateGameArea);
     },
-
     clear: function () {
       this.context.clearRect(0, 0, 700, 400);
     },
 
     stop: function () {
       cancelAnimationFrame(this.interval);
-      document.getElementById('start-button').style.visibility = "initial";
       this.clear();
     },
 
@@ -64,17 +57,16 @@ window.onload = () => {
     },
 
     gravity : function(){
-      rec.speedY += 1.26; //gravidade
-      rec.x += rec.speedX;
-      rec.y += rec.speedY;
-      rec.speedX *= 0.9; //atrito
-      rec.speedY *= 0.9; //atrito
+      player.speedY += 1.26; //gravidade
+      player.x += player.speedX;
+      player.y += player.speedY;
+      player.speedX *= 0.9; //atrito
+      player.speedY *= 0.9; //atrito
       
       // se o retangulo estiver caindo no chao
-      if (rec.y > 350 - 50 - 32){
-        rec.isPlayer = false;
-        rec.y = 350 - 50 - 32;
-        rec.speedY = 0;
+      if (player.y > 350 - 50 - 32){
+        player.y = 350 - 50 - 32;
+        player.speedY = 0;
         jumpCount = 2;
       }  
     },
@@ -103,78 +95,95 @@ window.onload = () => {
       }
     },
   };
-
-  class Objects {
-    constructor (width, height, x, y){
-      this.width = width;
-      this.height = height;
-      this.x = x;
-      this.y = y;
-    }
-  }
-
-  class Player extends Objects {
-    constructor (width, height, x, y, animation) {
-      super (width, height, x, y)
-      this.animation = animation;
-    }
-  }
-
-  
-  //=== Construcao do Obstaculo ===
-  class Obstaculo extends Objects {
-    constructor(width, height, color, x, y, isPlayer = false) {
-      super(width, height, x, y)
-      this.color = color;
-      this.speedX = 0;
-      this.speedY = 0;
-      this.isPlayer = isPlayer;
-    }
-
-    update() {
-      const ctx = myGameArea.context;
-      ctx.fillStyle = this.color;
-      ctx.fillRect(this.x, this.y, this.width, this.height);
-      
-    }
-
-    newPos() {
-      this.x += this.speedX;
-      this.x %= 500;
-    }
-
-    left() {
-      return this.x;
-    }
-    right() {
-      return this.x + this.width;
-    }
-    top() {
-      return this.y;
-    }
-    bottom() {
-      return this.y + this.height;
-    }
-
-    crashWith(obstacle) {
-      return !(this.bottom() < obstacle.top() || this.top() > obstacle.bottom() || this.right() < obstacle.left() || this.left() > obstacle.right());
-    }
-  }
-
-  
+  startGame();
   document.getElementById('start-button').onclick = () => {
     document.getElementById('start-button').style.visibility = 'hidden';
-      startGame();
-    
+      
   };
 
+  class Objects {
+    constructor (width, height, x, y,color){
+
+      this.canvas = document.getElementById('canvas'),
+      this.ctx = this.canvas.getContext('2d'),
+      this.ctx.fillRect(this.x, this.y, this.width, this.height);
+      this.ctx.fillStyle = color;
+
+      this.width = width;
+      this.height = height;
+      
+      this.x = x;
+      this.y = y;
+
+      
+      this.speedY = 0;
+      this.speedX = 0;
+
+      this.source = new Image();
+      this.source.src = './images/teste1.jpg'
+    }
+      draw(){
+          
+          this.ctx.drawImage(this.source, this.x, this.y, this.width, this.height);
+        }
+
+        left() {
+          return this.x;
+        }
+        right() {
+          return this.x + this.width;
+        }
+        top() {
+          return this.y;
+        }
+        bottom() {
+          return this.y + this.height;
+        }
   
+      jump(value) {
+        this.speedY -= value;
+
+        if(this.source.src === './images/teste1.jpg'){
+          this.source.src = './images/mato.jpg'
+          return;
+        }
+
+        if(this.source.src === '/images/mato.jpg'){
+          this.source.src = './images/teste1.jpg'
+          return;
+        }
+
+      }
+
+      crashWith(obstacle) {
+         return !(this.bottom() < obstacle.top() || this.top() > obstacle.bottom() || this.right() < obstacle.left() || this.left() > obstacle.right());
+       }
+}
+
+
+    class Player extends Objects {
+      constructor (width, height, x, y, color, ctx) {
+          super (width, height, x, y, color, ctx)
+        }
+        
+}
+
+  //=== Construcao do Obstaculo ===
+  class Obstaculo extends Objects {
+    constructor(width, height, x, y, color, ctx) {
+      super(width, height, x, y, color, ctx)
+    }
+    move(){
+      this.speedX = -4;
+      this.x += this.speedX;
+      this.x %= canvas.width;
+    }
+  }
+
   //Create new Player/Rectangle
-  const rec = new Obstaculo(30, 30, 'white', 100, 50);
-
-  //Criando personagem
-  // const player = new Player (SPRITE_SZ, SPRITE_SZ, 55, 250, new Animation());
-
+  //console.log('valor do ctx' + backgroundImage.ctx);
+  const player = new Player(30, 30, 100, 50, 'blue', backgroundImage.ctx);
+ const objeto = new Obstaculo(30, 30, 500, 265, 'blue', backgroundImage.ctx);
   function startGame() {
     myGameArea.start();
   }
@@ -191,18 +200,17 @@ window.onload = () => {
 
     //gravity &  obstacles
     myGameArea.gravity();
-    rec.update();
-    updateObstacles();
+
+    player.draw();
+
+    objeto.move();
+    objeto.draw();
     
+    //updateObstacles();
 
-    //animation start
-    id = requestAnimationFrame(updateGameArea);
+     //animation start
+     id = requestAnimationFrame(updateGameArea);
 
-
-    // player drawing
-    // rec.animation.change(sprite_sheet.frame_sets[0], 8);
-    // rec.animation.update();
-    // rec.animation.draw();
     checkGameOver();
     myGameArea.score();
   }
@@ -214,79 +222,48 @@ window.onload = () => {
     if((jumpCount <= 2 && jumpCount > 0)){
       switch (e.keyCode) {
         case 38: // up arrow
-          rec.speedY -= 25;
+          player.jump(25);
           jumpCount--;
         break;
+  
      }
     }
   });
   
 
   function updateObstacles() {
-    if(frames <= 5000){
+    if(frames <= 4000){
       for (let i = 0; i < myObstacles.length; i++) {
-        myObstacles[i].x += -7;
-        checkGameOver();
-        myObstacles[i].update();
+        console.log(myObstacles[i].speedX)
+        myObstacles[i].speedX += -7;
+         checkGameOver();
+        myObstacles[i].draw();
       }
-    } else if(frames > 5000){
+    } else if(frames > 4000){
       for (let i = 0; i < myObstacles.length; i++) {
-        myObstacles[i].x += -7.2;
+        myObstacles[i].speedX += -7.5;
         checkGameOver();
-        myObstacles[i].update();
+       myObstacles[i].draw();
       }
     }
+
+
 
     const colorR = Math.floor(Math.random() * colors.length);
-    const frameR = Math.floor(Math.random() * 14);
-    console.log(frames);
+    const frameR = Math.floor(Math.random() * 70);
+    //console.log(frames);
 
-
+    const x = myGameArea.canvas.width;
     //Frequencia de Obstaculos
-    if(frames < 1500){
-      if (frames % (130 - frameR) === 0){
-        let x = myGameArea.canvas.width;
-        myObstacles.push(new Obstaculo(30, 30, colors[colorR], x, 268));
-      }
 
-    } else if(frames < 2500) {
-        if (frames % (126 - frameR) === 0){
-          let x = myGameArea.canvas.width;
-          myObstacles.push(new Obstaculo(30, 30, colors[colorR], x, 268));
-        }  
-        // FLY ENEMIES
-        if (frames % (198 - frameR) === 0){
-          let x = myGameArea.canvas.width;
-          myObstacles.push(new Obstaculo(30, 30, colors[colorR], x, 268));
-        }
-        
-    } else if(frames <= 4000) {
-      if (frames % (120 - frameR) === 0){
-        let x = myGameArea.canvas.width;
-        myObstacles.push(new Obstaculo(30, 30, colors[colorR], x, 268));
-      }  
-      // FLY ENEMIES
-      if (frames % (185 - frameR) === 0){
-        let x = myGameArea.canvas.width;
-        myObstacles.push(new Obstaculo(30, 30, colors[colorR], x, 268));
-      }
-      
-    } else if(frames > 4000) {
-      if (frames % (110 - frameR) === 0){
-        let x = myGameArea.canvas.width;
-        myObstacles.push(new Obstaculo(30, 30, colors[colorR], x, 268));
-      }  
-      if (frames % (180 - frameR) === 0){
-        let x = myGameArea.canvas.width;
-        myObstacles.push(new Obstaculo(30, 30, colors[colorR], x, 268));
-      }
-    }
+    if(myObstacles.length < 1) myObstacles.push(new Obstaculo(30, 30, 60, 50, 'blue', backgroundImage.ctx));
+    // myObstacles.push(new Obstaculo(30, 30, Math.random(), 268, 'blue', ''));
   }
 
 
   function checkGameOver() {
     const crashed = myObstacles.some(function (obstacle) {
-      return rec.crashWith(obstacle);
+      return player.crashWith(obstacle);
     });
 
     if (crashed) {
