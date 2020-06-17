@@ -1,17 +1,22 @@
 window.onload = () => {
- 
-  let jumpCount = 0;
+  
   let frames = 0;
   let requestId = null;
   let startG = false;
+
   let points = 0;
   let extraPoints = 0;
+  let lifePoints = 3;
+  let jumpCount = 0;
 
   //OBSTACLES ARRAY
   let myObstacles = [];
   
   //POINTS ARRAY
   let myPoints = [];
+
+  //LIFE-POINTS ARRAY
+  let lifeP = [];
 
   let scoreColors = ["#03071e", "#370617", "#6a040f", "#9d0208", "#d00000", "#dc2f02", "#e85d04", "#e55934", "#fa7921", "#f48c06", "#faa307", "#ffba08"];
   let colorI = scoreColors.length;
@@ -22,6 +27,8 @@ window.onload = () => {
   roadImg.src = './images/mato.jpg';
   const coin = new Image();
   coin.src = '/images/Coin1.png';
+  const life = new Image();
+  life.src = './images/heart.png';
 
 
   //SONGS 
@@ -32,7 +39,9 @@ window.onload = () => {
   const scoreUP = new Audio();
   scoreUP.src = './audio/scoreUP.wav';
   const coins = new Audio();
-  coins.src = './audio/coins2.wav';
+  coins.src = './audio/coins1.wav';
+  const lose = new Audio();
+  lose.src = './audio/Lost.wav';
  
 
   const myGameArea = {
@@ -49,7 +58,7 @@ window.onload = () => {
 
     stop: function () {
       mainM.pause();
-      
+      lose.play();
       myGameArea.clear();
       myGameArea.context.beginPath();
       myGameArea.context.textAlign = "center";
@@ -61,7 +70,6 @@ window.onload = () => {
       myGameArea.context.fillStyle = scoreColors[colorI];
       myGameArea.context.font = "40px 'Fredoka One', cursive";
       myGameArea.context.fillText(`Your Score: ${points}`, 350, 300);
-      console.log("entrou no STOP");
 
       window.cancelAnimationFrame(requestId);
     },
@@ -79,10 +87,10 @@ window.onload = () => {
       this.context.beginPath();
       this.context.font = "35px 'Fredoka One', cursive";
       this.context.fillStyle = "#f2e8cf";
-      this.context.fillText(`Score: ${points}`, 260, 45);
+      this.context.fillText(`Score: ${points}`, 260, 55);
       } else if (points > 500) {
         this.context.fillStyle = scoreColors[colorI];
-        this.context.fillText(`Score: ${points}`, 260, 45);
+        this.context.fillText(`Score: ${points}`, 260, 55);
         this.canvas.style.borderColor =  scoreColors[colorI];
       }
     },
@@ -109,7 +117,7 @@ window.onload = () => {
     ctx: this.canvas.getContext('2d'),
     roadImg: roadImg,
     x: 0,
-    speed: -6.5,
+    speed: -6,
 
     move: function(){
       this.x += this.speed;
@@ -192,28 +200,28 @@ window.onload = () => {
       }
 
       draw(){
-          if(this.spriteCount < 5){
+          if(this.spriteCount < 4){
             this.ctx.drawImage(this.run1, this.x, this.y, this.width, this.height);
             this.spriteCount += 1;
-          } else if (this.spriteCount < 10) {
+          } else if (this.spriteCount < 8) {
             this.ctx.drawImage(this.run2, this.x, this.y, this.width, this.height);
             this.spriteCount += 1;
-          } else if (this.spriteCount < 15){
+          } else if (this.spriteCount < 12){
             this.ctx.drawImage(this.run3, this.x, this.y, this.width, this.height);
             this.spriteCount += 1;
-          } else if (this.spriteCount < 20){
+          } else if (this.spriteCount < 16){
             this.ctx.drawImage(this.run4, this.x, this.y, this.width, this.height);
             this.spriteCount += 1;
-          } else if (this.spriteCount < 25){
+          } else if (this.spriteCount < 20){
             this.ctx.drawImage(this.run5, this.x, this.y, this.width, this.height);
             this.spriteCount += 1;
-          } else if (this.spriteCount < 30){
+          } else if (this.spriteCount < 24){
             this.ctx.drawImage(this.run6, this.x, this.y, this.width, this.height);
             this.spriteCount += 1;
-          } else if (this.spriteCount < 35){
+          } else if (this.spriteCount < 28){
             this.ctx.drawImage(this.run7, this.x, this.y, this.width, this.height);
             this.spriteCount += 1;
-          } else if (this.spriteCount < 40){
+          } else if (this.spriteCount < 32){
             this.ctx.drawImage(this.run8, this.x, this.y, this.width, this.height);
             this.spriteCount += 1;
           } else {
@@ -308,15 +316,33 @@ window.onload = () => {
     }
   }
 
+  class Life extends Objects {
+    constructor(width, height, x, y, color, ctx) {
+      super(width, height, x, y, color, ctx)
+
+      this.heart = new Image();
+      this.heart.src = './images/heart.png'; 
+    } 
+    draw(){
+      this.ctx.drawImage(this.heart, this.x, this.y, this.width, this.height);
+    }
+  }
+
   //Create new Player/Rectangle
   const player = new Player(130, 100, 100, 50, 'blue', backgroundImage.ctx);
+
+  //StartGame with 3 lifes
+  lifeP.push(new Life (50, 50, 460, 20, 'blue', backgroundImage.ctx));
+  lifeP.push(new Life (50, 50, 520, 20, 'blue', backgroundImage.ctx));
+  lifeP.push(new Life (50, 50, 580, 20, 'blue', backgroundImage.ctx));
+  lifeP.push(new Life (50, 50, 580, 20, 'blue', backgroundImage.ctx));
+
 
   document.getElementById('start-button').onclick = () => {
       if(!startG){
         mainM.play();
-        myGameArea.start();
         startG = true;
-        console.log("entrou no START");
+        myGameArea.start();
       } else {
         window.location.reload();
       }
@@ -336,9 +362,10 @@ window.onload = () => {
 
     player.draw();
 
-    //Create & moving obstacles
-    updateObstacles();
+    //Create & moving obstacles, lifePoints and coins
+    updateObstaclesCoinsLife();
 
+    //Check if player got a coin
     checkPointsUp();
 
     requestId = requestAnimationFrame(updateGameArea);
@@ -347,8 +374,7 @@ window.onload = () => {
     checkGameOver();
   }
 
-  function updateObstacles(){
-    console.log("entrou no UPDATEOBSTACLE");
+  function updateObstaclesCoinsLife(){
     myObstacles.forEach((elem, i)=> {
       elem.x += -5.5;
       elem.move();
@@ -364,6 +390,10 @@ window.onload = () => {
       if(myPoints.x < -50){
         myPoints.splice(i, 1);
       }
+    })
+
+    lifeP.forEach((elem, i) => {
+      elem.draw();
     })
 
     if(frames <= 1500){
@@ -460,7 +490,7 @@ window.onload = () => {
       coins.play();
       myPoints.forEach((element, i) => {
         myPoints.splice(i, 1);
-        extraPoints += 20;
+        extraPoints += 10;
         coins.play();
       })
     }
@@ -471,8 +501,19 @@ window.onload = () => {
       return player.crashWith(obstacle);
     });
     if (crashed) {
-      console.log("entrou no CRASHED");
-      myGameArea.stop();   
+      lifePoints -= 1;
+
+      myObstacles.forEach((element, i) => {
+        myObstacles.splice(i, 1);
+      })
+
+      lifeP.forEach((element,i)=> {
+        lifeP.splice(i, 1);
+      })
+      lose.play();
+        if(lifePoints <= 0){
+          myGameArea.stop();   
+        }
     }
   }
 };
