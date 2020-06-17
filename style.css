@@ -1,10 +1,20 @@
+*{
+  font-family: 'Fredoka One', cursive;
+}
+
+
 body {
     padding: 0;
     text-align: center;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     justify-content: space-evenly;
-    background-color: #1daa40;
+    background-color: #6a994e;
+    height: 800px;;
+    background-image: url(/images/background.jpg);
+    background-size: cover;
+    background-position: center;
+    
   }
 
 
@@ -15,30 +25,42 @@ body {
     left: 50%;
 }
 
-canvas{
-    background-color: #1c1c1c91;
-    border: 1px solid white;
+.game-intro h1{
+  font-size: 25px;
+  color: #f2e8cf;
+  text-shadow: 4px 4px #000802;
+  
 }
 
-h1{
-  margin-top: 10%;
+
+canvas{
+    background-color: #386641;
+    border: 10px solid #f2e8cf;
+    border-radius: 8%;
+}
+
+#dino h1{
+  margin-top: 5%;
   letter-spacing: 15px;
-  font-family: 'Modak', cursive;
-  font-size: 50px;
+  font-size: 100px;
   font-style: italic;
+  color: #f0e8cf;
+  text-shadow: 5px 5px #ff0000
 }
 
 body button {
     font-size: 30px;
-    background-color: #191a19;
-    color: #fff;
+    background-color: #bc4749;
+    color: #f2e8cf;
+    text-shadow: 2px 2px #386641;
     padding: 20px 40px;
     border: 0;
     box-shadow: 0;
     border-radius: 5px;
     margin-bottom: 20px;
     border-radius: 12px;
-    border: 10px solid rgb(139, 38, 38);
+    border: 10px solid #2c4e33;
+    text-shadow: 2px 2px #386645;
   }
   
 
