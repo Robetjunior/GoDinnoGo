@@ -4,13 +4,24 @@ window.onload = () => {
   let frames = 0;
   let requestId = null;
   let startG = false;
+  let points = 0;
+  let extraPoints = 0;
 
-  //ARRAY DE OBSTACULOS
+  //OBSTACLES ARRAY
   let myObstacles = [];
+  
+  //POINTS ARRAY
+  let myPoints = [];
+
+  let scoreColors = ["#03071e", "#370617", "#6a040f", "#9d0208", "#d00000", "#dc2f02", "#e85d04", "#e55934", "#fa7921", "#f48c06", "#faa307", "#ffba08"];
+  let colorI = scoreColors.length;
+  let valueTest = 1;
 
   // IMAGES
   const roadImg = new Image();
   roadImg.src = './images/mato.jpg';
+  const coin = new Image();
+  coin.src = '/images/Coin1.png';
 
 
   //SONGS 
@@ -18,12 +29,15 @@ window.onload = () => {
   mainM.src = './audio/mainM.mp3';
   const jump = new Audio();
   jump.src = './audio/jump.wav';
+  const scoreUP = new Audio();
+  scoreUP.src = './audio/scoreUP.wav';
+  const coins = new Audio();
+  coins.src = './audio/coins2.wav';
  
 
   const myGameArea = {
     canvas: document.getElementById('canvas'),
     context: this.canvas.getContext('2d'),
-    points: 0,
 
     start: function () {
       resquestId = window.requestAnimationFrame(updateGameArea);
@@ -40,28 +54,36 @@ window.onload = () => {
       myGameArea.context.beginPath();
       myGameArea.context.textAlign = "center";
       myGameArea.context.font = "100px 'Fredoka One', cursive";
-      myGameArea.context.fillStyle = "#f2e8cf";
+      myGameArea.context.fillStyle = scoreColors[colorI];
       myGameArea.context.fillText("GAME OVER", 350, 200);
       // localStorage.setItem(this.topScore);
-   
+      
+      myGameArea.context.fillStyle = scoreColors[colorI];
       myGameArea.context.font = "40px 'Fredoka One', cursive";
-      myGameArea.context.fillText(`Your Score: ${this.points}`, 350, 300);
+      myGameArea.context.fillText(`Your Score: ${points}`, 350, 300);
+      console.log("entrou no STOP");
 
       window.cancelAnimationFrame(requestId);
     },
 
     score: function () {
-      
-      this.points = Math.floor(frames / 3);
-      if(this.points <=500){
+      if(points=== 500*valueTest){
+        scoreUP.play();
+        colorI -= 1;
+        valueTest += 1;
+        if(colorI<0) colorI = scoreColors.length;
+      }
+
+      points =  Math.floor(frames / 3) + extraPoints;
+      if(points <=500){
       this.context.beginPath();
       this.context.font = "35px 'Fredoka One', cursive";
       this.context.fillStyle = "#f2e8cf";
-      this.context.fillText(`Score: ${this.points}`, 260, 45);
-      }
-      if(this.points> 500){
-        this.context.fillStyle = "#F00";
-        this.context.fillText(`Score: ${this.points}`, 260, 45);
+      this.context.fillText(`Score: ${points}`, 260, 45);
+      } else if (points > 500) {
+        this.context.fillStyle = scoreColors[colorI];
+        this.context.fillText(`Score: ${points}`, 260, 45);
+        this.canvas.style.borderColor =  scoreColors[colorI];
       }
     },
 
@@ -132,7 +154,7 @@ window.onload = () => {
       return this.x;
     }
     right() {
-      return this.x + this.width - 85;
+      return this.x + this.width - 40;
     }
     top() {
       return this.y;
@@ -209,7 +231,7 @@ window.onload = () => {
     constructor(width, height, x, y, color, ctx) {
       super(width, height, x, y, color, ctx)
       this.source = new Image();
-      this.source.src = './images/box.png'
+      this.source.src = './images/box.png'   
       }
       draw(){
         this.ctx.drawImage(this.source, this.x, this.y, this.width, this.height);
@@ -218,6 +240,72 @@ window.onload = () => {
         this.speedX = -4;
         this.x += this.speedX;
       }
+  }  
+
+  class Points extends Objects {
+    constructor(width, height, x, y, color, ctx) {
+    super(width, height, x, y, color, ctx)
+    
+    this.min_height = 260;
+    this.max_height = 400;
+    this.spriteCount = 0;
+
+    this.spriteCount1 = 0;
+    this.coin1 = new Image();
+    this.coin1.src = './images/Coin1.png';  
+    this.coin2 = new Image();
+    this.coin2.src = './images/Coin2.png';
+    this.coin3 = new Image();
+    this.coin3.src = './images/Coin3.png';
+    this.coin4 = new Image();
+    this.coin4.src = './images/Coin4.png';
+    this.coin5 = new Image();
+    this.coin5.src = './images/Coin5.png';
+    this.coin6 = new Image();
+    this.coin6.src = './images/Coin6.png';
+
+    
+  }
+
+    draw(){
+    if(this.spriteCount < 5){
+      this.ctx.drawImage(this.coin1, this.x, this.y, this.width, this.height);
+      this.spriteCount += 1;
+    } else if (this.spriteCount < 10) {
+      this.ctx.drawImage(this.coin2, this.x, this.y, this.width, this.height);
+      this.spriteCount += 1;
+    } else if (this.spriteCount < 15){
+      this.ctx.drawImage(this.coin3, this.x, this.y, this.width, this.height);
+      this.spriteCount += 1;
+    } else if (this.spriteCount < 20){
+      this.ctx.drawImage(this.coin4, this.x, this.y, this.width, this.height);
+      this.spriteCount += 1;
+    } else if (this.spriteCount < 25){
+      this.ctx.drawImage(this.coin5, this.x, this.y, this.width, this.height);
+      this.spriteCount += 1;
+    } else if (this.spriteCount < 30){
+      this.ctx.drawImage(this.coin6, this.x, this.y, this.width, this.height);
+      this.spriteCount += 1;
+    } else {
+      this.spriteCount =0;
+      this.ctx.drawImage(this.coin1, this.x, this.y, this.width, this.height);
+    }
+    }
+    move(){
+      if(this.spriteCount1 < 40){ 
+        this.y -= 5;
+        this.speedX = -2;
+        this.x += this.speedX;
+        this.spriteCount1 += 1;
+      } else if(this.spriteCount1 <80){
+        this.y += 5;
+        this.speedX = -2;
+        this.x += this.speedX;
+        this.spriteCount1 += 1;
+      } else {
+        this.spriteCount1 = 0;
+      }
+    }
   }
 
   //Create new Player/Rectangle
@@ -228,6 +316,7 @@ window.onload = () => {
         mainM.play();
         myGameArea.start();
         startG = true;
+        console.log("entrou no START");
       } else {
         window.location.reload();
       }
@@ -237,8 +326,7 @@ window.onload = () => {
   function updateGameArea() {
     frames += 1;
     myGameArea.clear();
-    console.log(frames);
-
+    
     //parallax-bg
     backgroundImage.move();
     backgroundImage.draw();
@@ -250,8 +338,9 @@ window.onload = () => {
 
     //Create & moving obstacles
     updateObstacles();
-    
-     //animation start
+
+    checkPointsUp();
+
     requestId = requestAnimationFrame(updateGameArea);
 
     myGameArea.score();
@@ -259,66 +348,92 @@ window.onload = () => {
   }
 
   function updateObstacles(){
-    for (let i=0; i < myObstacles.length; i += 1){
-      myObstacles[i].x += -5.5;
-      myObstacles[i].move();
-      myObstacles[i].draw();
-      if(myObstacles[i].x < -80){
-        myObstacles.splice(i,1);
+    console.log("entrou no UPDATEOBSTACLE");
+    myObstacles.forEach((elem, i)=> {
+      elem.x += -5.5;
+      elem.move();
+      elem.draw();
+      if(elem.x < -80){
+        myObstacles.splice(i, 1);
       }
-    }
+    })
+
+    myPoints.forEach((elem, i) => {
+      elem.move();
+      elem.draw();
+      if(myPoints.x < -50){
+        myPoints.splice(i, 1);
+      }
+    })
 
     if(frames <= 1500){
-      if (frames % (105) === 0) {
+      if (frames % (100) === 0) {
           myObstacles.push(new Obstaculo(50, 50, 700, 235, 'blue', backgroundImage.ctx));
       }
+      if (frames % 350 ===0){
+        myPoints.push(new Points(50, 50, 700, 190, "blue"));
+      }
 
-    } else if (frames <= 1500){
-        if (frames % (100) === 0) {
+    } else if (frames <= 3000){
+        if (frames % (98) === 0) {
           myObstacles.push(new Obstaculo(50, 50, 700, 235, 'blue', backgroundImage.ctx));
         }
         if (frames % (170) === 0) {
           myObstacles.push(new Obstaculo(90, 90, 700, 190, 'blue', backgroundImage.ctx));
         }
-
-    } else if (frames <= 2500){
+        if (frames % 340 ===0){
+          myPoints.push(new Points(50, 50, 700, 190, "blue"));
+        }
+    } else if (frames <= 4500){
         if (frames % (95) === 0) {
           myObstacles.push(new Obstaculo(50, 50, 700, 235, 'blue', backgroundImage.ctx));
         }
         if (frames % (150) === 0) {
           myObstacles.push(new Obstaculo(90, 90, 700, 190, 'blue', backgroundImage.ctx));
       }
+        if (frames % 330 ===0){
+          myPoints.push(new Points(50, 50, 700, 190, "blue"));
+        }
 
-    } else if (frames <= 3500){
+    } else if (frames <= 6000){
         if (frames % (92) === 0) {
           myObstacles.push(new Obstaculo(50, 50, 700, 235, 'blue', backgroundImage.ctx));
         }
         if (frames % (145) === 0) {
           myObstacles.push(new Obstaculo(90, 90, 700, 190, 'blue', backgroundImage.ctx));
         }
-        
-    } else if (frames <= 4500){
+        if (frames % 330 ===0){
+          myPoints.push(new Points(50, 50, 700, 190, "blue"));
+        }
+    } else if (frames <= 7500){
       if (frames % (88) === 0) {
         myObstacles.push(new Obstaculo(50, 50, 700, 235, 'blue', backgroundImage.ctx));
       }
       if (frames % (140) === 0) {
         myObstacles.push(new Obstaculo(90, 90, 700, 190, 'blue', backgroundImage.ctx));
       }
-
-    } else if (frames <= 5500){
+      if (frames % 340 ===0){
+        myPoints.push(new Points(50, 50, 700, 190, "blue"));
+      }
+    } else if (frames <= 9000){
       if (frames % (80) === 0) {
         myObstacles.push(new Obstaculo(50, 50, 700, 235, 'blue', backgroundImage.ctx));
       }
-      if (frames % (130) === 0) {
+      if (frames % (135) === 0) {
         myObstacles.push(new Obstaculo(90, 90, 700, 190, 'blue', backgroundImage.ctx));
       }
-
+      if (frames % 320 ===0){
+        myPoints.push(new Points(50, 50, 700, 190, "blue"));
+      }
     } else if (frames > 5500){
-      if (frames % (70 - randomFrame) === 0) {
+      if (frames % (50) === 0) {
         myObstacles.push(new Obstaculo(50, 50, 700, 235, 'blue', backgroundImage.ctx));
       }
-      if (frames % (130) === 0) {
+      if (frames % (120) === 0) {
         myObstacles.push(new Obstaculo(90, 90, 700, 190, 'blue', backgroundImage.ctx));
+      }
+      if (frames % 310 ===0){
+        myPoints.push(new Points(50, 50, 700, 190, "blue"));
       }
     }
 }
@@ -336,13 +451,28 @@ window.onload = () => {
     }
   });
 
+
+  function checkPointsUp(){
+    const pointsUp = myPoints.some(function(points){
+      return player.crashWith(points);
+    });
+    if(pointsUp){
+      coins.play();
+      myPoints.forEach((element, i) => {
+        myPoints.splice(i, 1);
+        extraPoints += 20;
+        coins.play();
+      })
+    }
+  }
+
   function checkGameOver() {
     const crashed = myObstacles.some(function (obstacle) {
       return player.crashWith(obstacle);
     });
     if (crashed) {
+      console.log("entrou no CRASHED");
       myGameArea.stop();   
-     
     }
   }
 };
