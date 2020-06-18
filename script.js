@@ -237,8 +237,6 @@ window.onload = () => {
           this.speedY += 15; 
         }
         this.speedY -= value;
-        console.log(this.speedY, this.y)
-        
       }
   }
 
