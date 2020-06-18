@@ -98,7 +98,7 @@ window.onload = () => {
     },
 
     gravity : function(){
-      player.speedY += 1.32; //gravidade
+      player.speedY += 1.1; //gravidade
       player.x += player.speedX;
       player.y += player.speedY;
       player.speedX *= 0.9; //atrito
@@ -233,9 +233,6 @@ window.onload = () => {
 
       }
       jump(value) {
-        if(this.y <= 48) {
-          this.speedY += 15; 
-        }
         this.speedY -= value;
       }
   }

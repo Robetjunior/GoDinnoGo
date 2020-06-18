@@ -10,8 +10,7 @@ If you want to play and share [click here.](https://robetjunior.github.io/Projec
 For better experience, run this game in a browser on you nootebook or desktop PC. Unfortunatelly this game is not compatible with mobile, yet.
 
 <p align="center">
-    <img src="printDinno.png" alt="game">
-    <img src="printDinno2.png" alt="game">
+    <img src="./images/diPrint.png" alt="game">
 </p>
 
 ## How to Play
