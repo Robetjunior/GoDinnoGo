@@ -1,7 +1,7 @@
 # Project-The-Game
 
 ## Go Dinno, Go!
-Go Dinno, Go! an Endless Runner 2D style game.
+Go Dinno, Go! an Endless Runner 2D style game. <hr>
 Help Dinno survive by jumping over obstacles!
 
 ## Getting Started
@@ -24,7 +24,7 @@ For better experience, run this game in a browser on you nootebook or desktop PC
 
 
 ## Technical details
-this game was made in:
+This game was made in:
 - HTML Canvas, CSS and Vanilla JavaScript
 
 ## Goals
