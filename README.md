@@ -1,19 +1,20 @@
 # Project-The-Game
-[hr]
 
-# Go Dinno, Go!
+## Go Dinno, Go!
 Go Dinno, Go! an Endless Runner 2D style game.
 Help Dinno survive by jumping over obstacles!
 
-# Getting Started
+## Getting Started
 If you want to play and share [click here.](https://robetjunior.github.io/Project-The-Game/)
 
 For better experience, run this game in a browser on you nootebook or desktop PC. Unfortunatelly this game is not compatible with mobile, yet.
 
-<img src="printDinno.png">
-<img src="printDinno2.png">
+<p align="center">
+    <img src="printDinno.png" alt="game">
+    <img src="printDinno2.png" alt="game">
+</p>
 
-# How to Play
+## How to Play
 - Press STARTGAME and then your adventure will begin.
 - Use the ARROW UP to jump  over the obstacles and dodge the boxs.
 - You have double jump!
@@ -22,11 +23,11 @@ For better experience, run this game in a browser on you nootebook or desktop PC
 - Good luck and have fun!
 
 
-# Technical details
+## Technical details
 this game was made in:
 - HTML Canvas, CSS and Vanilla JavaScript
 
-# Goals
+## Goals
 - Add High-Scorer
 - New challenges
 - New scenarios
