@@ -10,7 +10,7 @@ body {
     justify-content: space-evenly;
     background-color: #6a994e;
     height: 800px;;
-    background-image: url(/images/background.jpg);
+    background-image: url(./images/background.jpg);
     background-size: cover;
     background-position: center;
     
