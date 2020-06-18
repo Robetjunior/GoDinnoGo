@@ -28,7 +28,7 @@ window.onload = () => {
   const roadImg = new Image();
   roadImg.src = './images/mato.jpg';
   const coin = new Image();
-  coin.src = '/images/Coin1.png';
+  coin.src = './images/Coin1.png';
   const life = new Image();
   life.src = './images/heart.png';
 
