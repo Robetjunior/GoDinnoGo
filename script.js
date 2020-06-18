@@ -6,7 +6,9 @@ window.onload = () => {
 
   let points = 0;
   let extraPoints = 0;
+
   let lifePoints = 3;
+
   let jumpCount = 0;
 
   //OBSTACLES ARRAY
@@ -348,7 +350,7 @@ window.onload = () => {
       }
   };
 
-  // UPDATE GAME
+  //  MAIN FUNCTION --> UPDATE GAME 
   function updateGameArea() {
     frames += 1;
     myGameArea.clear();
@@ -371,9 +373,10 @@ window.onload = () => {
     requestId = requestAnimationFrame(updateGameArea);
 
     myGameArea.score();
-    checkGameOver();
+    checkGameOver();  
   }
 
+  // Update/Move obstacles, coins, lifes & difficulty level
   function updateObstaclesCoinsLife(){
     myObstacles.forEach((elem, i)=> {
       elem.x += -5.5;
@@ -397,14 +400,14 @@ window.onload = () => {
     })
 
     if(frames <= 1500){
-      if (frames % (100) === 0) {
+      if (frames % (90) === 0) {
           myObstacles.push(new Obstaculo(50, 50, 700, 235, 'blue', backgroundImage.ctx));
       }
       if (frames % 350 ===0){
         myPoints.push(new Points(50, 50, 700, 190, "blue"));
       }
 
-    } else if (frames <= 3000){
+    } else if (frames <= 2500){
         if (frames % (98) === 0) {
           myObstacles.push(new Obstaculo(50, 50, 700, 235, 'blue', backgroundImage.ctx));
         }
@@ -414,7 +417,7 @@ window.onload = () => {
         if (frames % 340 ===0){
           myPoints.push(new Points(50, 50, 700, 190, "blue"));
         }
-    } else if (frames <= 4500){
+    } else if (frames <= 3500){
         if (frames % (95) === 0) {
           myObstacles.push(new Obstaculo(50, 50, 700, 235, 'blue', backgroundImage.ctx));
         }
@@ -425,7 +428,7 @@ window.onload = () => {
           myPoints.push(new Points(50, 50, 700, 190, "blue"));
         }
 
-    } else if (frames <= 6000){
+    } else if (frames <= 4500){
         if (frames % (92) === 0) {
           myObstacles.push(new Obstaculo(50, 50, 700, 235, 'blue', backgroundImage.ctx));
         }
@@ -435,7 +438,7 @@ window.onload = () => {
         if (frames % 330 ===0){
           myPoints.push(new Points(50, 50, 700, 190, "blue"));
         }
-    } else if (frames <= 7500){
+    } else if (frames <= 5500){
       if (frames % (88) === 0) {
         myObstacles.push(new Obstaculo(50, 50, 700, 235, 'blue', backgroundImage.ctx));
       }
@@ -445,7 +448,7 @@ window.onload = () => {
       if (frames % 340 ===0){
         myPoints.push(new Points(50, 50, 700, 190, "blue"));
       }
-    } else if (frames <= 9000){
+    } else if (frames <=6500){
       if (frames % (80) === 0) {
         myObstacles.push(new Obstaculo(50, 50, 700, 235, 'blue', backgroundImage.ctx));
       }
@@ -455,7 +458,7 @@ window.onload = () => {
       if (frames % 320 ===0){
         myPoints.push(new Points(50, 50, 700, 190, "blue"));
       }
-    } else if (frames > 5500){
+    } else if (frames <= 7500){
       if (frames % (50) === 0) {
         myObstacles.push(new Obstaculo(50, 50, 700, 235, 'blue', backgroundImage.ctx));
       }
@@ -465,10 +468,20 @@ window.onload = () => {
       if (frames % 310 ===0){
         myPoints.push(new Points(50, 50, 700, 190, "blue"));
       }
+    } else if (frames > 8500){
+      if (frames % (40) === 0) {
+        myObstacles.push(new Obstaculo(50, 50, 700, 235, 'blue', backgroundImage.ctx));
+      }
+      if (frames % (100) === 0) {
+        myObstacles.push(new Obstaculo(90, 90, 700, 190, 'blue', backgroundImage.ctx));
+      }
+      if (frames % 300 ===0){
+        myPoints.push(new Points(50, 50, 700, 190, "blue"));
+      }
     }
 }
   
-  //Controle & Permissao para pular apenas se jumpCount for > 0
+  //Controll & permission to jump if jumpCount > 0
   document.addEventListener('keydown', (e) => {
     if((jumpCount <= 2 && jumpCount > 0)){
       switch (e.keyCode) {
