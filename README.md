@@ -1,6 +1,4 @@
-# Project-The-Game
-
-## Go Dinno, Go!
+# Go Dinno, Go!
 Go Dinno, Go! an Endless Runner 2D style game. <br>
 Help Dinno survive by jumping over obstacles!
 
