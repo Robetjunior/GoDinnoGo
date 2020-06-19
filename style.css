@@ -42,7 +42,7 @@ canvas{
   font-size: 100px;
   font-style: italic;
   color: #f0e8cf;
-  text-shadow: 5px 5px rgb(216, 19, 19);
+  text-shadow: 5px 5px #28382b;
 }
 
 body button {

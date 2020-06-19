@@ -26,7 +26,7 @@ window.onload = () => {
 
   // IMAGES
   const roadImg = new Image();
-  roadImg.src = './images/mato.jpg';
+  roadImg.src = './images/gbPara.png';
   const coin = new Image();
   coin.src = './images/Coin1.png';
   const life = new Image();
@@ -105,8 +105,8 @@ window.onload = () => {
       player.speedY *= 0.9; //atrito
       
       // se o retangulo estiver caindo no chao
-      if (player.y > 350 - 135 - 32){
-        player.y = 350 - 135 - 32;
+      if (player.y > 350 - 53 - 32){
+        player.y = 350 - 53 - 32;
         player.speedY = 0;
         jumpCount = 2;
       }  
@@ -127,11 +127,11 @@ window.onload = () => {
     },
 
     draw: function(){
-      this.ctx.drawImage(this.roadImg, this.x, 0, 700, 400);
+      this.ctx.drawImage(this.roadImg, this.x, 0, 700, 370);
       if(this.speed < 0){
-        this.ctx.drawImage(this.roadImg, this.x + 700, 0, 700, 400);
+        this.ctx.drawImage(this.roadImg, this.x + 700, 0, 700, 370);
       } else{
-        this.ctx.drawImage(this.roadImg, this.x - this.roadImg, 0, 700, 400);
+        this.ctx.drawImage(this.roadImg, this.x - this.roadImg, 0, 700, 370);
       }
     },
   };
@@ -240,11 +240,25 @@ window.onload = () => {
   class Obstaculo extends Objects {
     constructor(width, height, x, y, color, ctx) {
       super(width, height, x, y, color, ctx)
-      this.source = new Image();
-      this.source.src = './images/box.png'   
+      this.monster1 = new Image();
+      this.monster1.src = './images/monster-1.png'  
+      this.monster2 = new Image();
+      this.monster2.src = './images/monster-2.png';  
+    
+      this.spriteCount3 = 0; 
+      
       }
       draw(){
-        this.ctx.drawImage(this.source, this.x, this.y, this.width, this.height);
+        if(this.spriteCount3 < 25){
+          this.ctx.drawImage(this.monster1, this.x, this.y, this.width, this.height);
+          this.spriteCount3 += 1;
+        } if(this.spriteCount3 < 50) {
+          this.ctx.drawImage(this.monster2, this.x, this.y, this.width, this.height);
+          this.spriteCount3 += 1;
+        } else {
+          this.ctx.drawImage(this.monster1, this.x, this.y, this.width, this.height);
+          this.spriteCount3 = 0;
+        }
       }
       move(){
         this.speedX = -4;
@@ -302,14 +316,14 @@ window.onload = () => {
     }
     }
     move(){
-      if(this.spriteCount1 < 40){ 
-        this.y -= 4;
-        this.speedX = -4.;
+      if(this.spriteCount1 < 50){ 
+        this.y -= 3;
+        this.speedX = -3;
         this.x += this.speedX;
         this.spriteCount1 += 1;
-      } else if(this.spriteCount1 <80){
-        this.y += 4;
-        this.speedX = -4.5;
+      } else if(this.spriteCount1 <100){
+        this.y += 3;
+        this.speedX = -3;
         this.x += this.speedX;
         this.spriteCount1 += 1;
       } else {
@@ -373,13 +387,13 @@ window.onload = () => {
     requestId = requestAnimationFrame(updateGameArea);
 
     myGameArea.score();
-    checkGameOver();  
+    // checkGameOver();  
   }
 
   // Update/Move obstacles, coins, lifes & difficulty level
   function updateObstaclesCoinsLife(){
     myObstacles.forEach((elem, i)=> {
-      elem.x += -5.5;
+      elem.x += -4.5;
       elem.move();
       elem.draw();
       if(elem.x < -80){
@@ -401,7 +415,7 @@ window.onload = () => {
 
     if(frames <= 1500){
       if (frames % (90) === 0) {
-          myObstacles.push(new Obstaculo(50, 50, 700, 235, 'blue', backgroundImage.ctx));
+          myObstacles.push(new Obstaculo(50, 50, 700, 300, 'blue', backgroundImage.ctx));
       }
       if (frames % 350 ===0){
         myPoints.push(new Points(50, 50, 700, 170, "blue"));
@@ -409,20 +423,20 @@ window.onload = () => {
 
     } else if (frames <= 2500){
         if (frames % (98) === 0) {
-          myObstacles.push(new Obstaculo(50, 50, 700, 235, 'blue', backgroundImage.ctx));
+          myObstacles.push(new Obstaculo(50, 50, 700, 300, 'blue', backgroundImage.ctx));
         }
         if (frames % (170) === 0) {
-          myObstacles.push(new Obstaculo(90, 90, 700, 190, 'blue', backgroundImage.ctx));
+          myObstacles.push(new Obstaculo(90, 90, 700, 260, 'blue', backgroundImage.ctx));
         }
         if (frames % 340 ===0){
           myPoints.push(new Points(50, 50, 700, 170, "blue"));
         }
     } else if (frames <= 3500){
         if (frames % (95) === 0) {
-          myObstacles.push(new Obstaculo(50, 50, 700, 235, 'blue', backgroundImage.ctx));
+          myObstacles.push(new Obstaculo(50, 50, 700, 300, 'blue', backgroundImage.ctx));
         }
         if (frames % (150) === 0) {
-          myObstacles.push(new Obstaculo(90, 90, 700, 190, 'blue', backgroundImage.ctx));
+          myObstacles.push(new Obstaculo(90, 90, 700, 260, 'blue', backgroundImage.ctx));
       }
         if (frames % 330 ===0){
           myPoints.push(new Points(50, 50, 700, 170, "blue"));
@@ -430,50 +444,50 @@ window.onload = () => {
 
     } else if (frames <= 4500){
         if (frames % (92) === 0) {
-          myObstacles.push(new Obstaculo(50, 50, 700, 235, 'blue', backgroundImage.ctx));
+          myObstacles.push(new Obstaculo(50, 50, 700, 300, 'blue', backgroundImage.ctx));
         }
         if (frames % (145) === 0) {
-          myObstacles.push(new Obstaculo(90, 90, 700, 190, 'blue', backgroundImage.ctx));
+          myObstacles.push(new Obstaculo(90, 90, 700, 260, 'blue', backgroundImage.ctx));
         }
         if (frames % 330 ===0){
           myPoints.push(new Points(50, 50, 700, 170, "blue"));
         }
     } else if (frames <= 5500){
       if (frames % (88) === 0) {
-        myObstacles.push(new Obstaculo(50, 50, 700, 235, 'blue', backgroundImage.ctx));
+        myObstacles.push(new Obstaculo(50, 50, 700, 300, 'blue', backgroundImage.ctx));
       }
       if (frames % (140) === 0) {
-        myObstacles.push(new Obstaculo(90, 90, 700, 190, 'blue', backgroundImage.ctx));
+        myObstacles.push(new Obstaculo(90, 90, 700, 260, 'blue', backgroundImage.ctx));
       }
       if (frames % 340 ===0){
         myPoints.push(new Points(50, 50, 700, 170, "blue"));
       }
     } else if (frames <=6500){
       if (frames % (80) === 0) {
-        myObstacles.push(new Obstaculo(50, 50, 700, 235, 'blue', backgroundImage.ctx));
+        myObstacles.push(new Obstaculo(50, 50, 700, 300, 'blue', backgroundImage.ctx));
       }
       if (frames % (135) === 0) {
-        myObstacles.push(new Obstaculo(90, 90, 700, 190, 'blue', backgroundImage.ctx));
+        myObstacles.push(new Obstaculo(90, 90, 700, 260, 'blue', backgroundImage.ctx));
       }
       if (frames % 320 ===0){
         myPoints.push(new Points(50, 50, 700, 170, "blue"));
       }
     } else if (frames <= 7500){
       if (frames % (50) === 0) {
-        myObstacles.push(new Obstaculo(50, 50, 700, 235, 'blue', backgroundImage.ctx));
+        myObstacles.push(new Obstaculo(50, 50, 700, 300, 'blue', backgroundImage.ctx));
       }
       if (frames % (120) === 0) {
-        myObstacles.push(new Obstaculo(90, 90, 700, 190, 'blue', backgroundImage.ctx));
+        myObstacles.push(new Obstaculo(90, 90, 700, 260, 'blue', backgroundImage.ctx));
       }
       if (frames % 310 ===0){
         myPoints.push(new Points(50, 50, 700, 170, "blue"));
       }
     } else if (frames > 8500){
       if (frames % (40) === 0) {
-        myObstacles.push(new Obstaculo(50, 50, 700, 235, 'blue', backgroundImage.ctx));
+        myObstacles.push(new Obstaculo(50, 50, 700, 300, 'blue', backgroundImage.ctx));
       }
       if (frames % (100) === 0) {
-        myObstacles.push(new Obstaculo(90, 90, 700, 190, 'blue', backgroundImage.ctx));
+        myObstacles.push(new Obstaculo(90, 90, 700, 260, 'blue', backgroundImage.ctx));
       }
       if (frames % 300 ===0){
         myPoints.push(new Points(50, 50, 700, 170, "blue"));
