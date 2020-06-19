@@ -387,7 +387,7 @@ window.onload = () => {
     requestId = requestAnimationFrame(updateGameArea);
 
     myGameArea.score();
-    // checkGameOver();  
+    checkGameOver();  
   }
 
   // Update/Move obstacles, coins, lifes & difficulty level
